@@ -1,0 +1,15 @@
+button {
+  padding: 1rem 3.8rem;
+  text-transform: uppercase;
+  border: 1px solid #eee;
+  outline: 0;
+  transition: 0.3s all ease;
+  font-weight: bold;
+  opacity: 0.9;
+}
+
+button:hover {
+  opacity: 1;
+  background: var(--light-black);
+  color: #fff;
+}
