@@ -1,7 +1,7 @@
 import React from "react";
 import "./Next.css";
 
-const Next = props => {
+const Previous = props => {
   return (
     <button
       onClick={() => {
@@ -9,9 +9,9 @@ const Next = props => {
         props.clicked();
       }}
     >
-      NEXT
+      PREVIOUS
     </button>
   );
 };
 
-export default Next;
+export default Previous;

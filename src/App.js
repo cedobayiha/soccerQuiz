@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import Title from "./components/Tittle";
 import Choices from "./components/Choices/Choices";
 import Next from "./components/Next/Next";
+import Previous from "./components/Next/Previous";
 import Restart from "./components/Restart/Restart";
 import EndScreenRestart from "./components/Restart/EndScreenRestart";
 import Tracker from "./components/Tracker/Tracker";
@@ -9,6 +10,9 @@ import Progress from "./components/Progress/Progress";
 import "./App.css";
 
 import EndScreen from "./components/endScreen/EndScreen";
+import EndScreenTitle from "./components/endScreen/EndScreenTitle";
+import EndScreenTracker from "./components/endScreen/EndScreenTracker";
+import Legend from "./components/endScreen/Legend";
 
 class App extends Component {
   state = {
@@ -52,7 +56,31 @@ class App extends Component {
     ],
     QIndex: 0,
     playerAnswers: [],
-    quizFinished: false
+    quizFinished: false,
+    counter: 0
+  };
+
+  handleCounter = () => {
+    let idx = this.state.QIndex;
+    let answers = this.state.questions[idx].answerKey;
+    let playa = this.state.playerAnswers[idx];
+    let count = this.state.counter + 1;
+    if (playa === answers) {
+      this.setState({ counter: count });
+    }
+  };
+  handleCounterN = () => {
+    let idx = this.state.QIndex - 1;
+    let answers = this.state.questions[idx].answerKey;
+    let playa = this.state.playerAnswers[idx];
+    let pop = this.state.playerAnswers;
+    
+    let count = this.state.counter - 1;
+    if (this.state.QIndex > 0 && playa === answers) {
+      pop.pop();
+      this.setState({ counter: count });
+      
+    }
   };
 
   handleNext = () => {
@@ -64,8 +92,11 @@ class App extends Component {
     }
   };
 
-  handleRestart = () => {
-    this.setState({ QIndex: 0});
+  handlePrevious = () => {
+    let tempIndex = this.state.QIndex - 1;
+    if (tempIndex > -1) {
+      this.setState({ QIndex: tempIndex});
+    }
   };
 
   selectChoice = (QIndex, choiceIndex) => {
@@ -73,8 +104,14 @@ class App extends Component {
     playerAnswersCopy[QIndex] = choiceIndex;
     this.setState({ playerAnswers: playerAnswersCopy });
   };
+
   EndScreenRestart = () => {
-    this.setState({ quizFinished: false, QIndex: 0, playerAnswers: []});
+    this.setState({
+      quizFinished: false,
+      QIndex: 0,
+      playerAnswers: [],
+      counter: 0
+    });
   };
 
   render() {
@@ -86,6 +123,7 @@ class App extends Component {
             <>
               {" "}
               <Title q={this.state.questions[this.state.QIndex].q} />
+             
               <Tracker
                 idx={this.state.QIndex}
                 qts={this.state.questions.length}
@@ -115,15 +153,26 @@ class App extends Component {
                 );
               })}
               <div className="footer">
-                <Next click={this.handleNext} />
+                <Next click={this.handleNext} clicked={this.handleCounter} />
+                <Previous
+                  click={this.handlePrevious}
+                  clicked={this.handleCounterN}
+                />
                 <Restart click={this.EndScreenRestart} />
               </div>{" "}
             </>
           ) : (
             <>
+              <EndScreenTitle />
+              <EndScreenTracker
+                count={this.state.counter}
+                num2={this.state.questions.length}
+              />
+              <Legend />
               <EndScreen
                 questions={this.state.questions}
                 playerAnswers={this.state.playerAnswers}
+                idx={this.state.QIndex}
               />
               <div className="footer">
                 <EndScreenRestart click={this.EndScreenRestart} />
